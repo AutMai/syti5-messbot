@@ -1,7 +1,7 @@
 #include <avr/eeprom.h>
-#include "lcd.h"
-#include "checksum.h"
 #include "global.h"
+#include "checksum.h"
+
 
 void eeprom_init();
 void eeprom_save();

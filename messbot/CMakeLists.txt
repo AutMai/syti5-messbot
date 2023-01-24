@@ -30,4 +30,4 @@ add_custom_target(
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-add_executable(Z_DUMMY_TARGET ${SRC_LIST} src/lcd.c include/lcd.h include/lcd_definitions.h src/uart.c include/uart.h src/eeprom.c include/eeprom.h src/crc8.c include/checksum.h include/global.h)
+add_executable(Z_DUMMY_TARGET ${SRC_LIST} src/lcd.c include/lcd.h include/lcd_definitions.h src/uart.c include/uart.h src/eeprom.c include/eeprom.h src/crc8.c include/checksum.h include/global.h src/timer.c include/timer.h src/adc.c include/adc.h src/custom-uart.c include/custom-uart.h src/transmit.c include/transmit.h src/custom-lcd.c include/custom-lcd.h src/button.c include/button.h)
