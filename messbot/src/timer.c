@@ -15,5 +15,4 @@ ISR(TIMER1_COMPA_vect) {
     PORTD |= (1 << PD3);
     _delay_ms(50);
     PORTD &= ~(1 << PD3);
-
 }

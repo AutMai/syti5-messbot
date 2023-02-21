@@ -2,6 +2,11 @@
 #include "custom-lcd.h"
 #include "button.h"
 
+#define UART_STX 91
+#define UART_ETX 93
+#define UART_ACK 'A'
+#define UART_NAK 'N'
+
 extern uint8_t transmitSensors;
 #define ALL 0
 #define SWITCH 1
@@ -10,6 +15,9 @@ extern uint8_t transmitSensors;
 void transmitAll();
 void transmitSwitch();
 void transmitLight();
+
+void transmitNAK();
+void transmitACK();
 
 void transmit();
 void transmit_off();
