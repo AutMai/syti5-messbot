@@ -16,7 +16,7 @@ extern uint8_t status;
 #define TRANSMIT_ON 3
 #define TRANSMIT 4
 
-typedef struct _versionControl {
+typedef struct {
     uint8_t size;
     uint8_t MajorVersion;
     uint8_t MinorVersion;

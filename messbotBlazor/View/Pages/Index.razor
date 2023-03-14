@@ -1,0 +1,93 @@
+﻿@page "/"
+@using View.Services
+@inject ReadSerialPortService ReadSerialPortService
+
+<PageTitle>Messbot</PageTitle>
+
+<div class="wrapper" style="@(GetStyle())">
+    <h1>Hello, world!</h1>
+
+    <h1>@Result.Luminosity</h1>
+    <h1>@Result.DigitalStatus</h1>
+
+    <h6>Switch</h6>
+    <input type="checkbox" checked @onchange="ChangeSwitchTransmission"/>
+
+    <h6>Light</h6>
+    <input type="checkbox" checked @onchange="ChangeLightTransmission"/>
+
+    <h6>Interval</h6>
+    <input type="range" min="1" max="4" value="1" class="slider" id="myRange" @onchange="ChangeTransmissionInterval">
+    
+    <button @onclick="RequestSingleLight">Request Single Light Data</button>
+    <button @onclick="RequestSingleSwitch">Request Single Switch Data</button>
+    <button @onclick="RequestSingleAll">Request Single Light+Switch Data</button>
+</div>
+
+
+@code {
+    private int Count { get; set; } = 100;
+    Timer _updateTimer;
+    public MeasureResult Result { get; set; } = new MeasureResult() {Luminosity = 0, DigitalStatus = ""};
+
+    public bool TransmitSwitch { get; set; } = true;
+    public bool TransmitLight { get; set; } = true;
+
+    protected override async Task OnInitializedAsync() {
+        Result = ReadSerialPortService.GetSerialValue();
+        _updateTimer = new Timer(state => { InvokeAsync(GetValue); }, null, 0, 1000);
+    }
+
+
+    public async Task GetValue() {
+        Result = ReadSerialPortService.GetSerialValue();
+        await InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose() {
+        _updateTimer.Dispose();
+    }
+
+    public string GetStyle() {
+    // background color relative to luminosity from 0,0,0 to 255,255,255
+        var r = (int) (Result.Luminosity * 255 / 5);
+        var g = (int) (Result.Luminosity * 255 / 5);
+        var b = (int) (Result.Luminosity * 255 / 5);
+
+    // inverted color for text
+        var r2 = (int) (255 - Result.Luminosity * 255 / 5);
+        var g2 = (int) (255 - Result.Luminosity * 255 / 5);
+        var b2 = (int) (255 - Result.Luminosity * 255 / 5);
+
+        return $"background-color: rgb({r},{g},{b}); width: 100vw; height: 100vh; padding: 5rem; color: rgb({r2},{g2},{b2});";
+    }
+
+    private void ChangeLightTransmission(ChangeEventArgs changeEventArgs) {
+        TransmitLight = !TransmitLight;
+        Console.WriteLine($"Light: {TransmitLight}, Switch: {TransmitSwitch}");
+        ReadSerialPortService.ChangeTransmission(TransmitSwitch, TransmitLight);
+    }
+
+    private void ChangeSwitchTransmission(ChangeEventArgs changeEventArgs) {
+        TransmitSwitch = !TransmitSwitch;
+        Console.WriteLine($"Light: {TransmitLight}, Switch: {TransmitSwitch}");
+        ReadSerialPortService.ChangeTransmission(TransmitSwitch, TransmitLight);
+    }
+
+    private void ChangeTransmissionInterval(ChangeEventArgs changeEventArgs) {
+        ReadSerialPortService.ChangeTransmissionInterval(changeEventArgs.Value.ToString()); 
+    }
+
+    private void RequestSingleLight() {
+        ReadSerialPortService.SingleLightTransmission();
+    }
+    
+    private void RequestSingleSwitch() {
+        ReadSerialPortService.SingleSwitchTransmission();
+    }
+    
+    private void RequestSingleAll() {
+        ReadSerialPortService.SingleTransmission();
+    }
+
+}
