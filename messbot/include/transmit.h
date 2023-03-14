@@ -4,8 +4,8 @@
 
 #define UART_STX 91
 #define UART_ETX 93
-#define UART_ACK 'A'
-#define UART_NAK 'N'
+#define UART_ACK 6
+#define UART_NAK 21
 
 extern uint8_t transmitSensors;
 #define ALL 0

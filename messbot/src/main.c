@@ -72,6 +72,7 @@ int main() {
             handleUartInput();
 
             if (bit_is_set(status, TRANSMIT)) {
+                OCR1A = (myversionControl.TransmitInterval + 1) * timerOneSec;
                 transmit();
                 status &= ~(1 << TRANSMIT);
             }
@@ -99,7 +100,7 @@ int main() {
                     eeprom_save();
 
                     uint8_t seconds = transmit_interval + 1; // add 1 to get the actual seconds
-                    OCR1A = timerOneSec * seconds; // set timer to new interval
+                    //OCR1A = timerOneSec * seconds; // set timer to new interval
 
                     lcd_say(itoa(seconds, tint, 10));
                 }
